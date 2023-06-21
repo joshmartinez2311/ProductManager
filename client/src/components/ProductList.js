@@ -3,8 +3,14 @@ import {Link} from 'react-router-dom';
 import axios from "axios";
 
 const ProductList = (props) => {
-    const {product, setProduct} = props;
-
+    const {removeFromDom,product, setProduct} = props;
+    const deleteProduct = (productId) => {
+        axios.delete(`http://localhost:5000/api/product/${productId}`)
+        .then(res => {
+            removeFromDom(productId)
+        })
+        .catch(err => console.log(err))
+    }
     useEffect(() => {
         axios.get("http://localhost:5000/api/product")
         .then((res) => {
@@ -39,7 +45,8 @@ const ProductList = (props) => {
                             <td>{product.price}</td>
                             <td>{product.description}</td>
                             <td>
-                                <button className="btn btn-danger">delete</button>
+                                <button className="btn btn-danger" onClick={(e) => {deleteProduct(product._id)}}>delete</button>|
+                                <Link to = {`/product/edit/${product._id}`}>Edit</Link>
                             </td>
                         </tr>
                         )
